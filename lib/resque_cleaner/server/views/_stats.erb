@@ -10,7 +10,7 @@
   </tr>
   <% @stats[type.to_sym].each do |field,count| %>
     <tr>
-      <% filter = "#{q}=#{URI::DEFAULT_PARSER.escape(field)}" %>
+      <% filter = "#{q}=#{ResqueCleaner::Server.clean_param(field)}" %>
       <td><%= field %></td>
       <td class="number">
         <a href="cleaner_list?<%=filter%>"><%= count[:total] %></a>

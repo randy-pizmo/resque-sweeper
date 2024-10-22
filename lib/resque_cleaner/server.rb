@@ -223,6 +223,14 @@ module ResqueCleaner
       @regex = params[:regex]=="" ? nil : params[:regex]
     end
 
+    def clean_param(param)
+      if URI.respond_to?(:encode)
+        URI.encode(param)
+      else
+        URI::DEFAULT_PARSER.escape(param)
+      end
+    end
+
     def build_urls
       params = {
         c: @klass,
@@ -230,7 +238,7 @@ module ResqueCleaner
         f: @from,
         t: @to,
         regex: @regex
-      }.map {|key,value| "#{key}=#{URI::DEFAULT_PARSER.escape(value.to_s)}"}.join("&")
+      }.map {|key,value| "#{key}=#{ResqueCleaner::Server.clean_param(value.to_s)}"}.join("&")
 
       @list_url = "cleaner_list?#{params}"
       @dump_url = "cleaner_dump?#{params}"
